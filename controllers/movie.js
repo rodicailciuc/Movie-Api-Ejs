@@ -34,8 +34,45 @@ const movieControllers = {
             });
         }
     },
-    updateMovie: (req, res) => {},
-    removeMovie: (req, res) => {}
+    updateMovieForm: (req, res) => {
+        const { id } = req.params;
+        const movie = Movie.getById(id);
+        if (movie) {
+            res.status(200).render('update-movie', { movie });
+        } else {
+            res.status(404).render('404', {
+                title: 'Movie not found',
+                message: 'The movie does not exist'
+            });
+        }
+    },
+    updateMovie: (req, res) => {
+        const { id } = req.params;
+        const { title, logo, director, year } = req.body;
+        const movie = Movie.getById(id);
+        if (movie) {
+            Movie.update(id, { title, logo, director, year });
+            res.status(200).redirect('/api/get/');
+        } else {
+            res.status(404).render('404', {
+                title: 'Movie not found',
+                message: 'The movie does not exist'
+            });
+        }
+    },
+    removeMovie: (req, res) => {
+        const { id } = req.params;
+        const movie = Movie.getById(id);
+        if (movie) {
+            Movie.delete(id);
+            res.status(200).redirect('/api/get');
+        } else {
+            res.status(404).render('404', {
+                title: 'Movie not found',
+                message: 'Movie does not exist'
+            });
+        }
+    }
 };
 
 export default movieControllers;
